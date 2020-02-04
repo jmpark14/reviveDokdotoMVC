@@ -30,10 +30,12 @@
         <div class="row" style="margin: 30px 0px">
             <div class="col-1">
             </div>
-            <form style="color: #E5E5E5; border-radius: 10px" class="card card-body bg-dark col-10" name="brdfrm" action="writeok.jsp" method="post">
+            <form style="color: #E5E5E5; border-radius: 10px" class="card card-body bg-dark col-10" name="brdfrm" action="${pageContext.request.contextPath}/writeServlet" method="post">
+                <%-- ${pageContext.request.contextPath} : 절대경로 --%>
                 <div class="form-group row">
                     <label class="col-form-label col-2 text-right" for="title"><strong>글 제목</strong></label>
                     <input style="background: #E5E5E5" type="text" id="title" name="title" class="form-control col-9" placeholder="글 제목을 입력하세요(*필수)">
+                    <%-- mgr의 pstmt.setString(1, req.getParameter("title")); 에서 파라메터 값과 name 값이 같아야  --%>
                 </div>
 
                 <div class="form-group row">

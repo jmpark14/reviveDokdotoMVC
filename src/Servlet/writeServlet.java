@@ -19,6 +19,12 @@ public class writeServlet extends HttpServlet {
 
         rvdkdMgr mgr = new rvdkdMgr(); // mgr 객체 생성
 
+        try {
+            mgr.insertBoard(req, res);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
 
     }
 
