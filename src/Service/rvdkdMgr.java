@@ -9,12 +9,12 @@ import java.sql.*;
 
 public class rvdkdMgr {
     // rvdkdMgr : 서블릿에서 호출한 것을 처리하고 서블릿의 post로 돌려보냄
-    // write.jsp -> 글쓰기 servlet 호출 -> servlet dopost를 통해 보냄(글 제목, 본문 등) -> rvdkdMgr(글쓰기 작업-dv에 넣기 등)
+    // write.jsp -> 글쓰기 servlet 호출 -> servlet dopost를 통해 보냄(글 제목, 본문 등) -> rvdkdMgr(글쓰기 작업-db에 넣기 등)
     // dopost : 데이터를 보내는 것
     // doget : 데이터를 받는 것
 
     private static String DRV = "oracle.jdbc.OracleDriver";
-    private static String URL = "jdbc.oracle:thin:@15.164.233.149:1521:XE";
+    private static String URL = "jdbc:oracle:thin:@15.164.233.149:1521:XE";
     private static String USR = "scott";
     private static String PWD = "tiger";
 
@@ -31,7 +31,7 @@ public class rvdkdMgr {
         // insertBoard(HttpServletRequest req, HttpServletResponse res) : servlet dopost를 통해 보낸 글 제목, 본문 등을 db로 보내기 위해 작성
         // insertBoard 는 원하는 메서드명으로 작성하면 됨
 
-        String insertSQL = "insert into SCOTT.RVDKDBOARD (BRDNO, USERID, TITLE, CONTENTS, TAGS) values (SCOTT.RVDKDSQ.nextval, tempmember, ?, ? ?)";
+        String insertSQL = "insert into SCOTT.RVDKDBOARD (BRDNO, USERID, TITLE, CONTENTS, TAGS) values (SCOTT.RVDKDSQ.nextval, 'tempmember', ?, ?, ?)";
 
         // DB에 넣기(try ~ catch 이용)
         try {
