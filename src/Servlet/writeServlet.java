@@ -20,7 +20,7 @@ public class writeServlet extends HttpServlet {
         rvdkdMgr mgr = new rvdkdMgr(); // mgr 객체 생성
 
         try {
-            mgr.insertBoard(req, res);
+            mgr.insertBoard(req, res); // QQQ 정확한 역활?
         } catch(Exception ex) {
             ex.printStackTrace();
         }

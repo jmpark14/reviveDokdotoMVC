@@ -15,17 +15,17 @@
     ResultSet rs = null;
 
 
-    //SQL 변수
+    // SQL 변수
     //String listSQL = "select brdno,title,userid,views,regdate from SCOTT.RVDKDBOARD order by brdno desc";
     String countSQL = "select count(brdno) from SCOTT.RVDKDBOARD";
     String pagingSQL = "select * from (select bd.brdno, bd.title, bd.userid, bd.views, bd.regdate, bd.thumbs, rownum as rnum from (select brdno,title,userid,views,regdate, thumbs from SCOTT.RVDKDBOARD order by brdno desc) bd where rownum <= ?) bd2 where bd2.rnum >= ? ";
     List<rvdkdBoard> lists = null;
 
-    //글번호 초기화
+    // 글번호 초기화
     int bdcnt = 0;
 
 
-    //글 갯수 반환
+    // 글 갯수 반환
     try {
         Class.forName(DRV);
         conn = DriverManager.getConnection(URL, USR, PWD);
@@ -244,6 +244,7 @@
                     <option value="title">제목</option>
                     <option value="contents">본문</option>
                     <option value="userid">작성자</option>
+
                 </select>
             </div>
             <div class="w300" style="padding-right:10px">

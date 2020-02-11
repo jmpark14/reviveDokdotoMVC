@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class rvdkdMgr {
     // rvdkdMgr : 서블릿에서 호출한 것을 처리하고 서블릿의 post로 돌려보냄
@@ -24,7 +26,7 @@ public class rvdkdMgr {
 
     rvdkdBoard b = null; // set-변수설정/get-변수가져옴 할때 쓰임
 
-    public rvdkdMgr() {} // 생성자 생성
+    public rvdkdMgr() {} // 생성자 생성 - QQQ정확한 역할?
 
     // 글쓰기 처리
     public void insertBoard(HttpServletRequest req, HttpServletResponse res) throws SQLException, IOException {
@@ -43,7 +45,7 @@ public class rvdkdMgr {
             pstmt.setString(2, req.getParameter("contents"));
             pstmt.setString(3, req.getParameter("tags"));
 
-            pstmt.executeUpdate(); // SQL처리를 완료함(DB가 바뀌므로 executeUpdate 사용)
+            pstmt.executeUpdate(); // SQL처리를 update함(DB가 바뀌므로 executeUpdate 사용) - SQL문 실행
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -55,8 +57,85 @@ public class rvdkdMgr {
         // 글을 다썼으니 리스트로 가야 함
         res.sendRedirect("riviveDokdo/list.jsp");
 
-        // 이제 writeok는 필요 없으니 삭제, write에서 action을 수
+        // 이제 writeok는 필요 없으니 삭제, write에서 action을 바꿔 줌
+    }
+
+    public List<rvdkdBoard> viewList (int brdno) throws SQLException {
+        // public List<rvdkdBoard> - 반환할 값이 list임
+        // viewList (int brdno) - view에서 int brdno = Integer.parseInt(request.getParameter("brdno"))로 처리했기 때문에 int 값으로 매개변수 줌
+
+        // 조회수 sql
+        String viewCountUpSQL = "update SCOTT.RVDKDBOARD set VIEWS = VIEWS + 1 where BRDNO =" + brdno;
+        // "update SCOTT.RVDKDBOARD set VIEWS = VIEWS + 1 where BRDNO=" 는 String 값이므로 viewList (int brdno) 의 brdno와 같다고 인식시켜야 함(+는 연결의 의미)
+        // update - table의 값을 업데이트 해줌
+
+        // 글 가져오기
+        String viewSQL = "select USERID, TITLE, CONTENTS, VIEWS, THUMBS, TAGS, REGDATE from SCOTT.RVDKDBOARD where BRDNO = " + brdno;
+
+        List<rvdkdBoard> list = null;
+
+        try {
+            Class.forName(DRV);
+            conn = DriverManager.getConnection(URL,USR,PWD);
+            // 조회수 올리기
+            pstmt = conn.prepareStatement(viewCountUpSQL); // 이걸 써주면 위의 SQL문에서 자동완성 가능
+            pstmt.executeUpdate();
+
+            //글 가져오기
+            pstmt = conn.prepareStatement(viewSQL);
+            rs = pstmt.executeQuery(); // SQL문 실행
+            list = new ArrayList<>();
+
+            if (rs.next()) { // 다음 줄이 존재한다면 계속 실행
+                b = new rvdkdBoard();
+                b.setUserid(rs.getString(1));
+                b.setTitle(rs.getString(2));
+                b.setContents(rs.getString(3));
+                b.setViews(rs.getString(4));
+                b.setThumbs(rs.getString(5));
+                b.setTags(rs.getString(6));
+                b.setRegdate(rs.getString(7));
+                list.add(b);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (conn != null) {conn.close();}
+            if (pstmt != null) {pstmt.close();}
+            if (rs != null) {rs.close();}
+        }
+
+        return list;
+    }
+
+    // 게시글 수정
+    public void modify (HttpServletRequest req, HttpServletResponse res) {
+
+    }
 
 
+    // 게시글 삭제
+    public void deleteBoard (HttpServletRequest req, HttpServletResponse res) throws SQLException, IOException {
+        int brdno = Integer.parseInt(req.getParameter("brdno"));
+        // view 에서 input에 hidden을 주어 코드를 작성한 이유가 바로 위처럼 번호를 불러오기 위함(어떤 글을 삭제 할지)
+
+        String DeleteSQL = "delete from SCOTT.RVDKDBOARD where BRDNO = " + brdno;
+        // where BRDNO = " + brdno; 부분은 띄어쓰기 유념!
+
+        try {
+            Class.forName(DRV);
+            conn = DriverManager.getConnection(URL, USR, PWD);
+            pstmt = conn.prepareStatement(DeleteSQL);
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (conn != null) {conn.close();}
+            if (pstmt != null) {pstmt.close();}
+        }
+
+        res.sendRedirect("riviveDokdo/list.jsp");
+        // sql을 처리하고 위의 페이지로 보냄
     }
 }
