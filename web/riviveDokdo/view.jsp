@@ -135,10 +135,11 @@
 
             <form class="col-6" action="${pageContext.request.contextPath}/mdServlet" method="post">
                 <%-- action=/mdServlet에서 alt+enter하여 prefix추가 => ${pageContext.request.contextPath} 생성 --%>
-                <button type="button" class="btn btn-outline-warning" id="updatebtn">
+                <button type="submit" class="btn btn-outline-warning" id="updatebtn">
+                <%-- button type이 button이면 수정/석제 처리를 못하므로 submit으로 변경해야  --%>
                     <i class="fa fa-pencil"> 수정하기</i>
                 </button>
-                <button type="button" class="btn btn-outline-danger" id="deletebtn">
+                <button type="submit" class="btn btn-outline-danger" id="deletebtn">
                     <i class="fa fa-trash-o"> 삭제하기</i>
                 </button>
                 <input value="<%=brdno%>" type="hidden" name="brdno">
@@ -184,7 +185,7 @@
         $('#deletebtn').on('click',function (e) {
             var select = document.getElementById("mdselect");
             // 위에서 아이디 값을 받아옴...
-            select.value = "delete"; // 받아온 값이 delete라면
+            select.value = "delete"; // 받아온 값이 delete라면함 (아래 주석에 이어서 진행)
             if (confirm('이 글을 삭제하시겠습니까?')) {
                 // confirm : 경고창 뜨면서 예, 아니오 선택하게 하는 함수
                 alert("글을 삭제했습니다!"); // 알람
@@ -201,7 +202,7 @@
     $(function () {
         $('#updatebtn').on('click', function (e) {
             var select = document.getElementById("mdselect");
-            select.value = "modify"; // 위와 비슷
+            select.value = "modify"; // 위의 delete와 비슷
        });
     });
 
